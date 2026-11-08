@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="en">
+      <!--Hi everyone! have fun with the code. Few things.
+      We use ai to help us with formating and such anc clean up.
+      We are barley open sorce but feel free to use
+      This is all gtlichy so be warned -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSight</title>
+  <link rel="icon" type="image/x-icon" href="https://codeberg.org/HtmlLol/P2P-EMIS/raw/commit/6d43d3316c18c28c1d11a129f992b9ff0ec0b9a8/download%20%281%29.png">
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    html,
+body {
+  scrollbar-color: #ff7a00 #111111;
+  scrollbar-width: thin;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: #111111 !important;
+  border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff9a3d 0%, #ff6500 100%) !important;
+  border: 2px solid #111111;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(255, 115, 0, .65);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffb15f 0%, #ff7415 100%) !important;
+}
+
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-corner {
+  background: #111111 !important;
+}
+
+    * { box-sizing: border-box; }
+
+    #youtube-container {
+      padding: 12px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #youtube-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 10px;
+      max-width: 1200px;
+    }
+
+    .yt-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(232,106,16,0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .yt-card:hover {
+      border-color: #e86a10;
+      transform: translateY(-2px);
+    }
+
+    .yt-card-name {
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #ccc;
+      font-family: 'Oxanium', sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .yt-card-btns {
+      display: flex;
+      gap: 4px;
+      padding: 0 8px 8px;
+    }
+
+    .yt-card-btns button {
+      flex: 1;
+      background: linear-gradient(135deg, #c97902, #f4570e);
+      border: none;
+      color: #fff;
+      padding: 5px 0;
+      border-radius: 4px;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 11px;
+      transition: opacity 0.2s;
+      cursor: pointer;
+    }
+
+    .yt-card-btns button:hover {
+      opacity: 0.85;
+    }
+
+    body.dark .yt-card {
+      background: #110800;
+      border-color: rgba(180,70,0,0.2);
+    }
+
+    body.dark .yt-card-name {
+      color: #888;
+    }
+
+    body {
+      font-family: 'Oxanium', sans-serif;
+      font-size: 22px;
+      margin: 0; padding: 0;
+      cursor: none;
+    }
+
+    a { color: #808080; text-decoration: none; }
+    a:hover { color: #C70039; text-decoration: underline; }
+    ul { list-style-type: none; padding: 0; }
+    button, a, input, textarea, select { cursor: none !important; }
+
+    #cursorDot {
+      position: fixed; top: 0; left: 0;
+      width: 14px; height: 14px;
+      background: rgba(255,80,80,0.35);
+      border: 1px solid rgba(255,120,120,0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%,-50%);
+      z-index: 99999;
+      backdrop-filter: blur(2px);
+      transition: transform 0.25s cubic-bezier(0.2,0.8,0.2,1),
+                  border-color 0.25s cubic-bezier(0.2,0.8,0.2,1),
+                  background 0.25s cubic-bezier(0.2,0.8,0.2,1);
+    }
+
+    #cursorRing {
+      position: fixed; top: 0; left: 0;
+      width: 34px; height: 34px;
+      border: 1px solid rgba(255,80,80,0.25);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%,-50%);
+      z-index: 99998;
+      transition: transform 0.25s cubic-bezier(0.2,0.8,0.2,1),
+                  border-color 0.25s cubic-bezier(0.2,0.8,0.2,1);
+    }
+
+    .background {
+      position: fixed; width: 100vw; height: 100vh;
+      top: 0; left: 0; margin: 0; padding: 0;
+      background: #a35f00;
+      overflow: hidden; z-index: -1;
+    }
+    .background li {
+      position: absolute; display: block; list-style: none;
+      width: 20px; height: 20px;
+      background: rgba(255,255,255,0.2);
+      animation: floatUp linear infinite;
+    }
+    body.dark .background li { background: rgba(120,120,120,0.18); }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg);         opacity: 1; border-radius: 0; }
+      100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+    }
+
+    .background li:nth-child(1)  { left:8%;  width:60px;  height:60px;  bottom:-60px;  animation-delay:0s;  animation-duration:4s; }
+    .background li:nth-child(2)  { left:33%; width:45px;  height:45px;  bottom:-45px;  animation-delay:2s;  animation-duration:5s; }
+    .background li:nth-child(3)  { left:58%; width:55px;  height:55px;  bottom:-55px;  animation-delay:7s;  animation-duration:4s; }
+    .background li:nth-child(4)  { left:82%; width:50px;  height:50px;  bottom:-50px;  animation-delay:14s; animation-duration:5s; }
+    .background li:nth-child(5)  { left:20%; width:40px;  height:40px;  bottom:-40px;  animation-delay:21s; animation-duration:6s; }
+    .background li:nth-child(6)  { left:70%; width:65px;  height:65px;  bottom:-65px;  animation-delay:31s; animation-duration:4s; }
+    .background li:nth-child(7)  { left:45%; width:48px;  height:48px;  bottom:-48px;  animation-delay:43s; animation-duration:5s; }
+    .background li:nth-child(8)  { left:90%; width:42px;  height:42px;  bottom:-42px;  animation-delay:55s; animation-duration:6s; }
+    .background li:nth-child(9)  { left:5%;  width:110px; height:110px; bottom:-110px; animation-delay:1s;  animation-duration:10s; }
+    .background li:nth-child(10) { left:27%; width:125px; height:125px; bottom:-125px; animation-delay:9s;  animation-duration:12s; }
+    .background li:nth-child(11) { left:53%; width:100px; height:100px; bottom:-100px; animation-delay:18s; animation-duration:9s; }
+    .background li:nth-child(12) { left:75%; width:135px; height:135px; bottom:-135px; animation-delay:28s; animation-duration:13s; }
+    .background li:nth-child(13) { left:15%; width:115px; height:115px; bottom:-115px; animation-delay:37s; animation-duration:11s; }
+    .background li:nth-child(14) { left:62%; width:108px; height:108px; bottom:-108px; animation-delay:49s; animation-duration:10s; }
+    .background li:nth-child(15) { left:38%; width:122px; height:122px; bottom:-122px; animation-delay:61s; animation-duration:12s; }
+    .background li:nth-child(16) { left:88%; width:105px; height:105px; bottom:-105px; animation-delay:73s; animation-duration:9s; }
+    .background li:nth-child(17) { left:12%; width:180px; height:180px; bottom:-180px; animation-delay:3s;  animation-duration:22s; }
+    .background li:nth-child(18) { left:40%; width:195px; height:195px; bottom:-195px; animation-delay:13s; animation-duration:26s; }
+    .background li:nth-child(19) { left:65%; width:170px; height:170px; bottom:-170px; animation-delay:23s; animation-duration:20s; }
+    .background li:nth-child(20) { left:85%; width:200px; height:200px; bottom:-200px; animation-delay:35s; animation-duration:28s; }
+    .background li:nth-child(21) { left:2%;  width:160px; height:160px; bottom:-160px; animation-delay:47s; animation-duration:24s; }
+    .background li:nth-child(22) { left:50%; width:185px; height:185px; bottom:-185px; animation-delay:59s; animation-duration:22s; }
+    .background li:nth-child(23) { left:77%; width:175px; height:175px; bottom:-175px; animation-delay:71s; animation-duration:26s; }
+    .background li:nth-child(24) { left:25%; width:190px; height:190px; bottom:-190px; animation-delay:83s; animation-duration:28s; }
+
+    body.dark .background li:nth-child(1)  { animation-duration:10s; }
+    body.dark .background li:nth-child(2)  { animation-duration:13s; }
+    body.dark .background li:nth-child(3)  { animation-duration:10s; }
+    body.dark .background li:nth-child(4)  { animation-duration:13s; }
+    body.dark .background li:nth-child(5)  { animation-duration:15s; }
+    body.dark .background li:nth-child(6)  { animation-duration:10s; }
+    body.dark .background li:nth-child(7)  { animation-duration:13s; }
+    body.dark .background li:nth-child(8)  { animation-duration:15s; }
+    body.dark .background li:nth-child(9)  { animation-duration:23s; }
+    body.dark .background li:nth-child(10) { animation-duration:28s; }
+    body.dark .background li:nth-child(11) { animation-duration:21s; }
+    body.dark .background li:nth-child(12) { animation-duration:30s; }
+    body.dark .background li:nth-child(13) { animation-duration:25s; }
+    body.dark .background li:nth-child(14) { animation-duration:23s; }
+    body.dark .background li:nth-child(15) { animation-duration:28s; }
+    body.dark .background li:nth-child(16) { animation-duration:21s; }
+    body.dark .background li:nth-child(17) { animation-duration:50s; }
+    body.dark .background li:nth-child(18) { animation-duration:60s; }
+    body.dark .background li:nth-child(19) { animation-duration:46s; }
+    body.dark .background li:nth-child(20) { animation-duration:64s; }
+    body.dark .background li:nth-child(21) { animation-duration:55s; }
+    body.dark .background li:nth-child(22) { animation-duration:50s; }
+    body.dark .background li:nth-child(23) { animation-duration:60s; }
+    body.dark .background li:nth-child(24) { animation-duration:64s; }
+
+    .fixed-header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      z-index: 1000; display: flex; align-items: center;
+      padding: 12px 20px;
+      --gx: 50%; --gy: 50%;
+      background: linear-gradient(135deg, #c97902, #ff3434);
+      color: white; border: none; overflow: hidden; cursor: default;
+      box-shadow: 0 0 20px rgba(255,80,80,0.35), 0 4px 15px rgba(0,0,0,0.25);
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+    .fixed-header::before {
+      content: ""; position: absolute; inset: -50%;
+      background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.35) 50%, transparent 80%);
+      animation: headerShine 3s linear infinite;
+      pointer-events: none;
+    }
+    .fixed-header::after {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at var(--gx) var(--gy),
+        rgba(255,220,160,0.8) 0%, rgba(255,140,50,0.25) 20%, transparent 60%);
+      opacity: 0; filter: blur(10px); pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .fixed-header:hover::after { opacity: 0.8; }
+    @keyframes headerShine {
+      from { transform: translateX(-120%); }
+      to   { transform: translateX(120%); }
+    }
+
+    .menu-button {
+      position: fixed; top: 0; right: 0; z-index: 9999;
+      margin: 0; padding: 0; width: 125px;
+      background: transparent; border: none;
+    }
+    .menu-button img {
+      width: 100%; height: auto; display: block;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+    .menu-button:hover img {
+      filter: drop-shadow(0 0 10px rgba(255,180,80,0.8))
+              drop-shadow(0 0 20px rgba(255,80,80,0.5))
+              drop-shadow(0 0 30px rgba(255,80,80,0.3));
+      transform: scale(1.03);
+    }
+    .menu-button:active img { transform: scale(0.98); }
+
+    /* â”€â”€ red-button style â”€â”€ */
+    .red-button {
+      --gx: 50%; --gy: 50%; --rx: 0deg; --ry: 0deg;
+      display: inline-block; position: relative; overflow: hidden;
+      background: linear-gradient(135deg, #c97902, #f4570e);
+      color: #fff; border: none; padding: 10px 20px; border-radius: 5px;
+      transform: perspective(700px) rotateX(var(--rx)) rotateY(var(--ry));
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.4s ease, color 0.3s ease;
+      will-change: transform;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 16px;
+    }
+    .red-button:hover {
+      box-shadow: 0 0 20px rgba(255,80,80,0.6), 0 8px 25px rgba(0,0,0,0.25);
+      color: #fff; text-decoration: none;
+    }
+    .red-button::before {
+      content: ""; position: absolute; inset: -50%;
+      background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.45) 50%, transparent 80%);
+      transform: translateX(-120%);
+      transition: transform 0.5s ease;
+      pointer-events: none;
+    }
+    .red-button:hover::before { transform: translateX(120%); }
+    .red-button::after {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at var(--gx) var(--gy),
+        rgba(255,220,160,0.9) 0%, rgba(255,140,50,0.4) 20%, transparent 55%);
+      filter: blur(10px); opacity: 0;
+      transition: opacity 0.2s ease; pointer-events: none;
+    }
+    .red-button:hover::after { opacity: 1; }
+    .red-button:active {
+      transform: perspective(700px) rotateX(var(--rx)) rotateY(var(--ry)) scale(0.96);
+    }
+
+    /* â”€â”€ force games.js injected inputs to look like red-button â”€â”€ */
+    .buttons-container input[type="button"],
+    #sections-container input[type="button"] {
+      --gx: 50%; --gy: 50%;
+      background: linear-gradient(135deg, #c97902, #f4570e) !important;
+      color: #fff !important;
+      border: none !important;
+      padding: 10px 20px !important;
+      border-radius: 5px !important;
+      font-family: 'Oxanium', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 500 !important;
+      cursor: none !important;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease, transform 0.15s ease !important;
+      width: auto !important;
+      height: auto !important;
+      text-align: left !important;
+      box-shadow: none;
+    }
+    .buttons-container input[type="button"]:hover,
+    #sections-container input[type="button"]:hover {
+      box-shadow: 0 0 20px rgba(255,80,80,0.6), 0 8px 25px rgba(0,0,0,0.25) !important;
+      transform: translateY(-2px) !important;
+    }
+    .buttons-container input[type="button"]:active,
+    #sections-container input[type="button"]:active {
+      transform: translateY(0) scale(0.97) !important;
+    }
+
+    /* â”€â”€ styled range sliders â”€â”€ */
+    input[type="range"] {
+      -webkit-appearance: none !important;
+      appearance: none !important;
+      width: min(460px, 100%) !important;
+      height: 8px !important;
+      padding: 0 !important;
+      margin: 10px 0 !important;
+      border: 1px solid rgba(232,106,16,0.35) !important;
+      border-radius: 999px !important;
+      outline: none !important;
+      background: linear-gradient(
+        90deg,
+        #f4570e 0%,
+        #c97902 var(--range-progress, 50%),
+        rgba(255,255,255,0.10) var(--range-progress, 50%),
+        rgba(255,255,255,0.10) 100%
+      ) !important;
+      box-shadow: 0 0 12px rgba(232,106,16,0.12), inset 0 1px 2px rgba(0,0,0,0.45) !important;
+      cursor: none !important;
+      transition: box-shadow .2s ease, filter .2s ease !important;
+    }
+
+    input[type="range"]:hover {
+      filter: brightness(1.12);
+      box-shadow: 0 0 18px rgba(244,87,14,0.35), inset 0 1px 2px rgba(0,0,0,0.45) !important;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: linear-gradient(135deg, #ff9b38, #f4570e);
+      box-shadow: 0 0 0 3px rgba(244,87,14,0.18), 0 0 14px rgba(244,87,14,0.55);
+      cursor: none;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 0 5px rgba(244,87,14,0.16), 0 0 20px rgba(244,87,14,0.7);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background: linear-gradient(135deg, #ff9b38, #f4570e);
+      box-shadow: 0 0 0 3px rgba(244,87,14,0.18), 0 0 14px rgba(244,87,14,0.55);
+      cursor: none;
+    }
+
+    input[type="range"]::-moz-range-progress {
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #f4570e, #c97902);
+    }
+
+    body.dark input[type="range"] {
+      background: linear-gradient(
+        90deg,
+        #ff7417 0%,
+        #8e3900 var(--range-progress, 50%),
+        rgba(255,255,255,0.07) var(--range-progress, 50%),
+        rgba(255,255,255,0.07) 100%
+      ) !important;
+      border-color: rgba(180,70,0,0.35) !important;
+    }
+
+    body.dark input[type="range"]::-webkit-slider-thumb {
+      background: linear-gradient(135deg, #ff8a2b, #8e3900);
+      border-color: #c95c00;
+      box-shadow: 0 0 0 3px rgba(180,70,0,0.18), 0 0 14px rgba(180,70,0,0.5);
+    }
+
+    /* letter headers from games.js */
+    .letter-header {
+      color: #e86a10 !important;
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.08em !important;
+      text-transform: uppercase !important;
+      padding-bottom: 8px !important;
+      border-bottom: 2px solid rgba(232,106,16,0.25) !important;
+      margin-bottom: 12px !important;
+      font-family: 'Oxanium', sans-serif !important;
+    }
+
+    .letter-section {
+      margin-bottom: 32px;
+      padding: 0 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .letter-section.empty { display: none !important; }
+
+    .buttons-container {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      align-items: flex-start !important;
+    }
+
+    .empty-message { display: none !important; }
+
+    /* dark mode overrides for injected buttons */
+    body.dark .buttons-container input[type="button"],
+    body.dark #sections-container input[type="button"] {
+      background: linear-gradient(135deg, #1a0d00, #2a1500) !important;
+      color: #c95c00 !important;
+      border: 1px solid rgba(180,70,0,0.3) !important;
+    }
+    body.dark .buttons-container input[type="button"]:hover,
+    body.dark #sections-container input[type="button"]:hover {
+      box-shadow: 0 0 18px rgba(200,80,0,0.5) !important;
+      color: #ff7a1a !important;
+    }
+    body.dark .letter-header {
+      color: #c95c00 !important;
+      border-bottom-color: rgba(180,70,0,0.2) !important;
+    }
+
+    .code-box {
+      --gx: 50%; --gy: 50%;
+      position: relative; width: 320px; padding: 5px;
+      background: #1a1a1a; border: 1px solid #444; border-radius: 12px;
+      overflow: hidden;
+    }
+    .code-box::after {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at var(--gx) var(--gy),
+        rgba(255,180,80,0.75) 0%, rgba(255,120,30,0.25) 25%, transparent 60%);
+      opacity: 0; transition: opacity 0.15s ease; pointer-events: none;
+    }
+    .code-box:hover::after { opacity: 1; }
+    .code-box.flash { animation: unlockFlash 0.35s ease; }
+    @keyframes unlockFlash {
+      0%   { border-color: #444; }
+      50%  { border-color: #ff9a3d; box-shadow: 0 0 15px rgba(255,150,50,0.8); }
+      100% { border-color: #444; box-shadow: none; }
+    }
+    .code-input {
+      width: 100%; background: #222; color: white;
+      border: none; outline: none; padding: 10px; border-radius: 8px;
+      font-family: 'Oxanium', sans-serif; font-size: 16px;
+    }
+    .code-input::placeholder { color: #aaa; }
+
+    .fancy-text {
+      position: relative; display: inline-block;
+      padding: 12px 18px; margin: 10px 0; color: #fff;
+      font-family: 'Oxanium', sans-serif;
+      background: linear-gradient(90deg, rgba(255,40,40,0.12), rgba(255,120,40,0.18), rgba(255,40,40,0.12));
+      border: 1px solid rgba(255,120,120,0.25); border-radius: 12px; overflow: hidden;
+      text-shadow: 0 0 5px rgba(255,120,120,0.5), 0 0 15px rgba(255,120,120,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .fancy-text::before {
+      content: ""; position: absolute; top: 0; left: -150%;
+      width: 75%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transform: skewX(-20deg);
+      animation: fancySweep 5s linear infinite;
+      pointer-events: none;
+    }
+    .fancy-text:hover {
+      box-shadow: 0 0 15px rgba(255,80,80,0.4), 0 0 30px rgba(255,80,80,0.15);
+      transform: scale(1.01);
+    }
+    @keyframes fancySweep {
+      0%   { left: -150%; }
+      100% { left: 250%; }
+    }
+
+    #hiddenArea { display: none; padding: 20px; }
+    .page-content { padding-top: 80px; }
+
+    .watermark {
+      position: fixed; top: 90%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 8vw; font-weight: bold; text-align: center;
+      width: 1000%; z-index: 9999; pointer-events: none;
+    }
+
+    #darkToggle {
+      position: fixed; bottom: 20px; left: 20px; z-index: 9999;
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2);
+      background: rgba(30,30,30,0.85);
+      color: white; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(6px);
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.15s ease;
+    }
+    #darkToggle:hover { border-color: rgba(255,255,255,0.5); transform: scale(1.08); }
+
+    body.dark { background: #111; }
+    body.dark .background { background: #1a1a1a; }
+    body.dark .fixed-header {
+      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+      box-shadow: 0 0 20px rgba(0,0,0,0.6), 0 4px 15px rgba(0,0,0,0.4);
+    }
+    body.dark .fixed-header::before { display: none; }
+    body.dark .red-button {
+      background: linear-gradient(135deg, #1a0d00, #2a1500);
+      color: #c95c00;
+      border: 1px solid rgba(180,70,0,0.3);
+    }
+    body.dark .red-button:hover { box-shadow: 0 0 18px rgba(200,80,0,0.5); color: #ff7a1a; }
+    body.dark .fancy-text {
+      background: linear-gradient(90deg, rgba(30,12,0,0.8), rgba(40,18,0,0.9), rgba(30,12,0,0.8));
+      border-color: rgba(180,70,0,0.3); color: #c95c00;
+    }
+    body.dark .code-box { background: #110800; border-color: rgba(180,70,0,0.3); }
+    body.dark .code-input { background: #1a0d00; color: #c95c00; }
+    body.dark .code-input::placeholder { color: rgba(180,80,0,0.5); }
+    body.dark #darkToggle { background: rgba(180,60,10,0.25); border-color: rgba(200,80,20,0.6); }
+
+    /* search box */
+    #gameSearchWrap {
+      padding: 12px 20px 0 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    #gameSearch {
+      padding: 10px 16px;
+      width: 100%; max-width: 460px;
+      background: #1a1a1a;
+      border: 1px solid rgba(232,106,16,0.3);
+      border-radius: 6px;
+      color: #f0f0f0;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 14px;
+      outline: none;
+    }
+    #gameSearch:focus { border-color: #e86a10; }
+    #gameSearch::placeholder { color: #555; }
+    body.dark #gameSearch { background: #1a0d00; border-color: rgba(180,70,0,0.3); color: #c95c00; }
+
+    /* â”€â”€ database selector tabs â”€â”€ */
+    #dbSelector {
+      display: flex;
+      gap: 8px;
+      padding: 16px 20px 6px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .db-tab {
+      background: transparent;
+      border: 1px solid rgba(232,106,16,0.35);
+      color: #888;
+      padding: 7px 18px;
+      border-radius: 5px;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 14px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    .db-tab:hover { border-color: #e86a10; color: #e86a10; }
+    .db-tab.active {
+      background: linear-gradient(135deg, #c97902, #f4570e);
+      color: #fff;
+      border-color: transparent;
+    }
+    body.dark .db-tab { border-color: rgba(180,70,0,0.3); color: #555; }
+    body.dark .db-tab.active { color: #fff; }
+
+    #gnrunner-container { display: none; padding: 12px 20px; }
+    #gnrunner-controls { margin-bottom: 12px; }
+    #gnrunnerSearch {
+      padding: 10px 16px;
+      width: 100%; max-width: 460px;
+      background: #1a1a1a;
+      border: 1px solid rgba(232,106,16,0.3);
+      border-radius: 6px;
+      color: #f0f0f0;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 14px;
+      outline: none;
+    }
+    #gnrunnerSearch:focus { border-color: #e86a10; }
+    #gnrunnerSearch::placeholder { color: #555; }
+    body.dark #gnrunnerSearch { background: #1a0d00; border-color: rgba(180,70,0,0.3); color: #c95c00; }
+    #gnrunner-loading { color: #e86a10; font-family: 'Oxanium', sans-serif; padding: 20px 0; font-size: 14px; }
+    #gnrunner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 10px;
+      max-width: 1200px;
+    }
+    .gn-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(232,106,16,0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .gn-card:hover { border-color: #e86a10; transform: translateY(-2px); }
+    .gn-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #111; }
+    .gn-card-name {
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #ccc;
+      font-family: 'Oxanium', sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .gn-card-btns { display: flex; gap: 4px; padding: 0 8px 8px; }
+    .gn-card-btns button {
+      flex: 1;
+      background: linear-gradient(135deg, #c97902, #f4570e);
+      border: none;
+      color: #fff;
+      padding: 5px 0;
+      border-radius: 4px;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 11px;
+      transition: opacity 0.2s;
+    }
+    .gn-card-btns button:hover { opacity: 0.85; }
+    body.dark .gn-card { background: #110800; border-color: rgba(180,70,0,0.2); }
+    body.dark .gn-card-name { color: #888; }
+
+    #duckmath-container { display: none; padding: 12px 20px; }
+    #duckmath-controls { margin-bottom: 12px; }
+    #duckmathSearch {
+      padding: 10px 16px;
+      width: 100%; max-width: 460px;
+      background: #1a1a1a;
+      border: 1px solid rgba(232,106,16,0.3);
+      border-radius: 6px;
+      color: #f0f0f0;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 14px;
+      outline: none;
+    }
+    #duckmathSearch:focus { border-color: #e86a10; }
+    #duckmathSearch::placeholder { color: #555; }
+    body.dark #duckmathSearch { background: #1a0d00; border-color: rgba(180,70,0,0.3); color: #c95c00; }
+    #duckmath-loading { color: #e86a10; font-family: 'Oxanium', sans-serif; padding: 20px 0; font-size: 14px; }
+    #duckmath-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 10px;
+      max-width: 1200px;
+    }
+    .dm-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(232,106,16,0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .dm-card:hover { border-color: #e86a10; transform: translateY(-2px); }
+    .dm-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #111; }
+    .dm-card-name {
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #ccc;
+      font-family: 'Oxanium', sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dm-card-btns { display: flex; gap: 4px; padding: 0 8px 8px; }
+    .dm-card-btns button {
+      flex: 1;
+      background: linear-gradient(135deg, #c97902, #f4570e);
+      border: none;
+      color: #fff;
+      padding: 5px 0;
+      border-radius: 4px;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 11px;
+      transition: opacity 0.2s;
+    }
+    .dm-card-btns button:hover { opacity: 0.85; }
+    body.dark .dm-card { background: #110800; border-color: rgba(180,70,0,0.2); }
+    body.dark .dm-card-name { color: #888; }
+  
+/* Axiom jsDelivr source sections */
+#extraSourceTabs{display:flex;flex-wrap:wrap;gap:8px;padding:16px 20px 6px;max-width:1200px;margin:0 auto}
+.extra-source-tab{background:transparent;border:1px solid rgba(232,106,16,.35);color:#888;padding:7px 14px;border-radius:5px;font-family:'Oxanium',sans-serif;font-size:13px;cursor:none}
+.extra-source-tab:hover{border-color:#e86a10;color:#e86a10}
+.extra-source-tab.active{background:linear-gradient(135deg,#c97902,#f4570e);color:#fff;border-color:transparent}
+body.dark .extra-source-tab{border-color:rgba(180,70,0,.3);color:#555}
+#extraSourcePanels{max-width:1200px;margin:0 auto}
+.extra-source-panel{display:none;padding:12px 20px}
+.extra-source-panel.active{display:block}
+.extra-source-controls{margin-bottom:12px}
+.extra-source-search{padding:10px 16px;width:100%;max-width:460px;background:#1a1a1a;border:1px solid rgba(232,106,16,.3);border-radius:6px;color:#f0f0f0;font-family:'Oxanium',sans-serif;font-size:14px;outline:none}
+body.dark .extra-source-search{background:#1a0d00;border-color:rgba(180,70,0,.3);color:#c95c00}
+.extra-source-loading{color:#e86a10;padding:20px 0;font-size:14px}
+.extra-source-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.extra-game-card{background:#1a1a1a;border:1px solid rgba(232,106,16,.2);border-radius:8px;overflow:hidden;transition:border-color .2s,transform .15s}
+.extra-game-card:hover{border-color:#e86a10;transform:translateY(-2px)}
+.extra-game-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#111}
+.extra-game-name{padding:6px 8px;font-size:12px;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.extra-game-btns{display:flex;gap:4px;padding:0 8px 8px}
+.extra-game-btns button{flex:1;background:linear-gradient(135deg,#c97902,#f4570e);border:none;color:#fff;padding:5px 0;border-radius:4px;font-family:'Oxanium',sans-serif;font-size:11px;cursor:none}
+body.dark .extra-game-card{background:#110800;border-color:rgba(180,70,0,.2)}
+body.dark .extra-game-name{color:#888}
+.extra-empty{padding:30px 0;color:#777;font-size:13px}
+</style>
+</head>
+
+<body>
+  <div id="cursorRing"></div>
+  <div id="cursorDot"></div>
+
+  <ul class="background">
+    <li></li><li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li><li></li>
+  </ul>
+
+  <header class="fixed-header">
+    Game Websight &mdash; click logo for more
+  </header>
+
+  <button onclick="toggleArea()" class="menu-button">
+    <img src="https://codeberg.org/cedarlol/P2P-EMIS/raw/branch/main/download%20%281%29.png" alt="Open Menu">
+  </button>
+
+  <button id="darkToggle" onclick="toggleDark()" title="Toggle dark mode">ðŸŒ™</button>
+
+  <div class="watermark"></div>
+
+  <div id="hiddenArea" style="padding:20px; display:none;">
+    <br>
+    <p class="fancy-text">
+     Hello, this is a fully coded game website made by P2P. I will put
+        settings and info here along with updates. Only one amature self taught  game dev
+        makes this so sorry if things are slow. we are in v12 right now! im
+        trying to ad luminsdk and searph along with cloud gaming but its not
+        easy so be paient. Also the code is private ask me in discord if you want it. oh yeah and we are the ONLY site that has duckmath haha join the discord its fun.
+      Hi felt like editng this might not get cloud games ngl also they loki a gimmick still trying and im sorta close
+      might get some parners if your reading this school prob started gl grades matter dont just use this xd. also zodiac.icu is my fav proxy if u wondering no im not giving u a  good link stay here!!
+    </p>
+    <p class="fancy-text">
+      The code system limits access to some areas. Nothing important, don't worry about it. If you have a  code, put it in there.
+    </p>
+
+    <div class="code-box" id="codeBox">
+      <input type="password" class="code-input" id="codeInput" placeholder="Enter Code">
+    </div>
+    <br>
+    <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
+      <button class="red-button" onclick="openRandomDuck()">DuckMath - LINKS</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/GameWebSight')">Open in about:blank cloaked</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/DATA')">Open in Data Url</button>
+      <button class="red-button"onclick="window.open('https://discord.gg/b6QRdA7bjR')">Discord   </button>
+<button class="red-button" onclick="openRandomLink()">More links!</button>
+
+<script>
+function openRandomLink() {
+    const links = `
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/index4.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/funsight.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/moresight.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/websight.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/websightsarecool.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/indexsight.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/sight30.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/2-loadsight-web.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/web-5-gamesight.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/3-buildsight-web.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/web-playsight-4.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/6-viewsight-web.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/web-7-codesight.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/8-fetchsight-web.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/web-runsight-9.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/10-shardsight-web.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/web-1-lightsight.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/playweb3.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/gamesweb6.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/seeweb7.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/loadsight4.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/buildweb7.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/fetchweb8.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/runweb5.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/viewweb9.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/codeweb6.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/playsight8.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/gamesweb9.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/seesight4.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/netweb4.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/loadsight5.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/buildsight5.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/fetchsight2.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/runsight2.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/viewsight3.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/codesight6.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/buildweb73.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/netweb36.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/codesight20.svg
+https://cdn.jsdelivr.net/gh/p2pwebsight/p2pwebsight@main/viewweb60.svg
+`.trim().split(/\s+/);
+
+    const randomLink = links[Math.floor(Math.random() * links.length)];
+    window.open(randomLink, '_blank');
+}
+</script>      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/aidata')">Open ai in Data Url</button>
+      <button class="red-button" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScu2bdgHiqAmDsWjMpkuo1BgHki0CJQ3vJOH8csR9FKn_XtoQ/viewform?usp=header','_blank')">Recommendations form</button>
+      <button class="red-button" onclick="(async()=>{const r=await fetch('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/chat');const h=await r.text();const w=window.open('about:blank','_blank');w.document.open();w.document.write(h);w.document.close();})()">Open chat</button>
+      <button class="red-button" onclick="(async()=>{const r=await fetch('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/gn');const h=await r.text();const w=window.open('about:blank','_blank');w.document.open();w.document.write(h);w.document.close();})()">Open Gn-Math</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/game')">More games list</button>
+      <button class="red-button" onclick="(async()=>{const r=await fetch('https://bitbucket.org/p2p-alt-puablic/p2p-emis/raw/main/duckmath');const h=await r.text();const w=window.open('about:blank','_blank');w.document.open();w.document.write(h);w.document.close();})()">Duckmath UNBLOCKABLE</button>
+    </div>
+        <p class="fancy-text">
+Less blocked discord - only p2p - dont swear pls
+    </p>
+<br>
+    <iframe
+    src="https://e.widgetbot.io/channels/1525241810006311083/1549180278763823164"
+    width="100%"
+    height="300"
+    frameborder="0"
+    style="border:0;">
+</iframe>
+  </div>
+
+  <div class="page-content">
+    <br><br>
+
+    <!-- Manually added games -->
+    <p class="fancy-text" style="display:block; margin: 0 20px 10px 20px; font-size:15px;">
+      Manually added by P2P â€” hand-picked and hosted directly.
+    </p>
+    <div style="display:flex; flex-wrap:wrap; gap:10px; padding:0 20px; max-width:1200px; margin:0 auto;">
+<button class="red-button" onclick="launchMinecraft()"> The newest variant of minecraft (basicly no one has also click once give it a second) </button>      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/deathrun3d')">Deathrun 3D</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/ai')">AI</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/tiktok')">Tiktok unblockable</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/tunuki')">Tanuki Sunset</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/bitlife')">Bitlife</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/blockblast')">Blockblast</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/cookie')">Cookie Clicker</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/peopleplayground')">People Playground</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/2048')">2048</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/radgoll1')">Ragdoll Archers</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/radgoll2')">Ragdoll Hit</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/wordle')">Wordle</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/geometrydash')">Gdweb</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/sandboxels')">Sandboxels</button>
+      <button class="red-button" onclick="fetchGame('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/slope')">Slope</button>
+    </div>
+
+    <!-- Game library label -->
+    <p class="fancy-text" style="display:block; margin: 18px 20px 6px 20px; font-size:15px;">
+      Game Library â€” loaded from external libraries not managed by p2p (Axiom, Noah's Hub, Truffled, etc. via jsDelivr CDN), all games should be unblockable if not tell us with the form and we will host a unblockable variant in our handpicked section.
+    </p>
+
+<!-- Database selector tabs -->
+<div id="dbSelector">
+  <button class="db-tab" onclick="switchDB('youtube', this)">youtube playables</button>
+  <button class="db-tab active" onclick="switchDB('bubbls', this)">ugs library</button>
+  <button class="db-tab" onclick="switchDB('gnrunner', this)">gn-math</button>
+  <button class="db-tab" onclick="switchDB('duckmath', this)">duckmath</button>
+  <button class="db-tab" onclick="switchDB('axiom', this)" data-extra="axiom">Axiom</button>
+  <button class="db-tab" onclick="switchDB('noah', this)" data-extra="noah">Noah's Hub</button>
+  <button class="db-tab" onclick="switchDB('truffled', this)" data-extra="truffled">Truffled</button>
+  <button class="db-tab" onclick="switchDB('3kh0', this)" data-extra="3kh0">3kh0 Lite</button>
+  <button class="db-tab" onclick="switchDB('nebula', this)" data-extra="nebula">Nebula CDN</button>
+  <button class="db-tab" onclick="switchDB('classplay', this)" data-extra="classplay">ClassPlay</button>
+  <button class="db-tab" onclick="switchDB('ubg98', this)" data-extra="ubg98">UBG98</button>
+  <button class="db-tab" onclick="switchDB('cisco', this)" data-extra="cisco">Cisco</button>
+  <button class="db-tab" onclick="switchDB('ubg', this)" data-extra="ubg">Ubg</button>
+  <button class="db-tab" onclick="switchDB('seraph', this)" data-extra="seraph">Seraph</button>
+  <button class="db-tab" onclick="switchDB('elite', this)" data-extra="elite">Elite Gamez</button>
+  <button class="db-tab" onclick="switchDB('ckv', this)" data-extra="ckv">Chicken Kings Vault</button>
+</div>
+<div id="extraSourcePanels">
+  <div class="extra-source-panel active" data-panel="axiom"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-axiom" placeholder="Search Axiom games..."></div><div class="extra-source-loading" id="extraLoading-axiom">Loading...</div><div class="extra-source-grid" id="extraGrid-axiom"></div></div>
+  <div class="extra-source-panel" data-panel="noah"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-noah" placeholder="Search Noah's Hub games..."></div><div class="extra-source-loading" id="extraLoading-noah">Loading...</div><div class="extra-source-grid" id="extraGrid-noah"></div></div>
+  <div class="extra-source-panel" data-panel="truffled"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-truffled" placeholder="Search Truffled games..."></div><div class="extra-source-loading" id="extraLoading-truffled">Loading...</div><div class="extra-source-grid" id="extraGrid-truffled"></div></div>
+  <div class="extra-source-panel" data-panel="3kh0"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-3kh0" placeholder="Search 3kh0 Lite games..."></div><div class="extra-source-loading" id="extraLoading-3kh0">Loading...</div><div class="extra-source-grid" id="extraGrid-3kh0"></div></div>
+  <div class="extra-source-panel" data-panel="nebula"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-nebula" placeholder="Search Nebula games..."></div><div class="extra-source-loading" id="extraLoading-nebula">Loading...</div><div class="extra-source-grid" id="extraGrid-nebula"></div></div>
+  <div class="extra-source-panel" data-panel="classplay"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-classplay" placeholder="Search ClassPlay games..."></div><div class="extra-source-loading" id="extraLoading-classplay">Loading...</div><div class="extra-source-grid" id="extraGrid-classplay"></div></div>
+  <div class="extra-source-panel" data-panel="ubg98"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-ubg98" placeholder="Search UBG98 games..."></div><div class="extra-source-loading" id="extraLoading-ubg98">Loading...</div><div class="extra-source-grid" id="extraGrid-ubg98"></div></div>
+  <div class="extra-source-panel" data-panel="cisco"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-cisco" placeholder="Search Cisco games..."></div><div class="extra-source-loading" id="extraLoading-cisco">Loading...</div><div class="extra-source-grid" id="extraGrid-cisco"></div></div>
+  <div class="extra-source-panel" data-panel="ubg"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-ubg" placeholder="Search Ubg games..."></div><div class="extra-source-loading" id="extraLoading-ubg">Loading...</div><div class="extra-source-grid" id="extraGrid-ubg"></div></div>
+  <div class="extra-source-panel" data-panel="seraph"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-seraph" placeholder="Search Seraph games..."></div><div class="extra-source-loading" id="extraLoading-seraph">Loading...</div><div class="extra-source-grid" id="extraGrid-seraph"></div></div>
+  <div class="extra-source-panel" data-panel="elite"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-elite" placeholder="Search Elite Gamez..."></div><div class="extra-source-loading" id="extraLoading-elite">Loading...</div><div class="extra-source-grid" id="extraGrid-elite"></div></div>
+  <div class="extra-source-panel" data-panel="ckv"><div class="extra-source-controls"><input class="extra-source-search" id="extraSearch-ckv" placeholder="Search Chicken Kings Vault..."></div><div class="extra-source-loading" id="extraLoading-ckv">Loading...</div><div class="extra-source-grid" id="extraGrid-ckv"></div></div>
+</div>
+
+<div id="gameSearchWrap">
+  <input type="text" id="gameSearch" placeholder="Search all games..." oninput="filterGames(this.value)">
+</div>
+
+<!-- YouTube Playables -->
+<div id="youtube-container" style="display:none;">
+  <div id="youtube-grid"></div>
+</div>
+
+<!-- games.js renders into this -->
+<div id="sections-container"></div>
+
+    <!-- GN Runner game list -->
+    <div id="gnrunner-container">
+      <div id="gnrunner-controls">
+        <input type="text" id="gnrunnerSearch" placeholder="Search GN math games..." oninput="filterGnRunner(this.value)">
+      </div>
+      <div id="gnrunner-loading" style="display:none">Loading games...</div>
+      <div id="gnrunner-grid"></div>
+    </div>
+
+
+    <!-- Duckmath game list -->
+    <div id="duckmath-container">
+      <div id="duckmath-controls">
+        <input type="text" id="duckmathSearch" placeholder="Search duckmath games..." oninput="filterDuckmath(this.value)">
+      </div>
+      <div id="duckmath-loading" style="display:none">Loading games...</div>
+      <div id="duckmath-grid"></div>
+    </div>
+    
+  </div>
+
+
+<script>
+const YOUTUBE_PLAYABLES = [
+  "3d-bolt-master",
+  "3d-bowling",
+  "8-ball-classic",
+  "99-balls-3d",
+  "amaze",
+  "angry-birds-showdown",
+  "aquapark-io",
+  "archery-world-tour",
+  "attack-hole",
+  "ball-blast",
+  "balloon-paradise",
+  "basket-battle",
+  "basketball-frvr",
+  "bazooka-boy",
+  "bolly-beat",
+  "bottle-jump-3d",
+  "bouncemasters",
+  "bowmasters",
+  "bridge-race",
+  "build-a-queen",
+  "cannon-balls-3d",
+  "carrom-clash",
+  "chess-classic",
+  "city-smash",
+  "color-burst-3d",
+  "color-match",
+  "color-water-sort-3d",
+  "crossy-road",
+  "dan-the-man",
+  "dig-deep",
+  "draw-the-line",
+  "fashion-battle",
+  "fill-the-fridge",
+  "find-the-alien",
+  "flappy-dunk",
+  "fork-n-sausage",
+  "freekick-football",
+  "go-escape",
+  "going-balls",
+  "guess-their-answer",
+  "gym-stack",
+  "harvest-io",
+  "hide-n-seek",
+  "hill-climb-racing-lite",
+  "kitchen-bazar",
+  "magic-tiles-3",
+  "match-triple-3d",
+  "maze-speedrun",
+  "mob-control-html5",
+  "mr-racer",
+  "om-nom-run",
+  "pac-man-superfast",
+  "parking-rush",
+  "pokey-ball",
+  "pou",
+  "race-master-3d",
+  "room-sort",
+  "royal-towers-medieval-td",
+  "scooter-xtreme",
+  "slice-it-all",
+  "slime-io",
+  "soccer-dash",
+  "solar-smash",
+  "stacky-dash",
+  "state-io",
+  "stealth-master",
+  "stick-war-legacy"
+];
+
+const YOUTUBE_BASE =
+  "https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/";
+
+function ytTitle(name) {
+  return name
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function ytURL(name) {
+  return YOUTUBE_BASE + name + ".html"
+}
+
+function fetchGame(url) {
+  const win = window.open('', '_blank');
+  fetch(url + '?v=' + Date.now())
+    .then(r => r.text())
+    .then(html => {
+      setTimeout(() => {
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+      }, 50);
+    })
+    .catch(err => {
+      win.document.open();
+      win.document.write(`<html><body style="background:#111;color:white;font-family:sans-serif;padding:20px;"><h1>Load Failed</h1><pre>${err}</pre></body></html>`);
+      win.document.close();
+    });
+}
+
+function renderYoutubePlayables(filter = "") {
+  const grid = document.getElementById("youtube-grid");
+  if (!grid) return;
+
+  const q = filter.toLowerCase().trim();
+
+  grid.innerHTML = "";
+
+  for (const name of YOUTUBE_PLAYABLES) {
+    const title = ytTitle(name);
+
+    if (q && !title.toLowerCase().includes(q)) continue;
+
+    const card = document.createElement("div");
+    card.className = "yt-card";
+
+    const titleEl = document.createElement("div");
+    titleEl.className = "yt-card-name";
+    titleEl.textContent = title;
+
+    const buttons = document.createElement("div");
+    buttons.className = "yt-card-btns";
+
+    const openBtn = document.createElement("button");
+    openBtn.textContent = "Open";
+    openBtn.onclick = () => fetchGame(ytURL(name));
+    openBtn.style.cssText = "background: linear-gradient(135deg, #c97902, #f4570e); color: #fff; border: none; padding: 5px 0; border-radius: 4px; font-family: 'Oxanium', sans-serif; font-size: 11px; flex: 1; cursor: pointer; transition: opacity 0.2s;";
+
+    const downloadBtn = document.createElement("button");
+    downloadBtn.textContent = "Download";
+    downloadBtn.onclick = () => downloadYoutubePlayable(name);
+    downloadBtn.style.cssText = "background: linear-gradient(135deg, #c97902, #f4570e); color: #fff; border: none; padding: 5px 0; border-radius: 4px; font-family: 'Oxanium', sans-serif; font-size: 11px; flex: 1; cursor: pointer; transition: opacity 0.2s;";
+
+    buttons.appendChild(openBtn);
+    buttons.appendChild(downloadBtn);
+
+    card.appendChild(titleEl);
+    card.appendChild(buttons);
+
+    grid.appendChild(card);
+  }
+}
+
+async function downloadYoutubePlayable(name) {
+  try {
+    const response = await fetch(ytURL(name));
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    const html = await response.text();
+
+    const blob = new Blob([html], {
+      type: "text/html;charset=utf-8"
+    });
+
+    const objectURL = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = objectURL;
+    a.download = name + ".html";
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    setTimeout(() => URL.revokeObjectURL(objectURL), 1000);
+
+  } catch (error) {
+    console.error("Failed to download " + name + ".html:", error);
+    alert("Failed to download " + name + ".html");
+  }
+}
+
+
+
+window.filterGames = function(value) {
+  const youtube = document.getElementById("youtube-container");
+
+  if (youtube && youtube.style.display !== "none") {
+    renderYoutubePlayables(value);
+    return;
+  }
+
+  if (typeof filterLibraryGames === "function") {
+    filterLibraryGames(value);
+  }
+};
+
+renderYoutubePlayables();
+</script>
+  <!-- CDN scripts -->
+  <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/searchbut.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/games.js"></script>
+
+  <script>
+    // â”€â”€ Strip "cl" prefix from all injected button labels â”€â”€
+    function stripClPrefix() {
+      document.querySelectorAll('#sections-container input[type="button"]').forEach(btn => {
+        if (!btn._stripped) {
+          btn._stripped = true;
+          if (btn.value.startsWith('cl')) {
+            btn.value = btn.value.slice(2);
+          }
+          btn.addEventListener('pointermove', e => {
+            const r = btn.getBoundingClientRect();
+            const x = e.clientX - r.left, y = e.clientY - r.top;
+            btn.style.setProperty('--gx', `${x/r.width*100}%`);
+            btn.style.setProperty('--gy', `${y/r.height*100}%`);
+          });
+          btn.addEventListener('mouseenter', () => {
+            ring.style.transform   = 'translate(-50%,-50%) scale(0.6)';
+            ring.style.borderColor = 'rgba(255,120,120,0.6)';
+            dot.style.transform    = 'translate(-50%,-50%) scale(1.8)';
+            dot.style.background   = 'rgba(255,120,120,0.5)';
+          });
+          btn.addEventListener('mouseleave', () => {
+            ring.style.transform   = 'translate(-50%,-50%) scale(1)';
+            ring.style.borderColor = 'rgba(255,80,80,0.25)';
+            dot.style.transform    = 'translate(-50%,-50%) scale(1)';
+            dot.style.background   = 'rgba(255,80,80,0.35)';
+          });
+        }
+      });
+    }
+
+    const observer = new MutationObserver(() => {
+      stripClPrefix();
+      styleRangeSliders();
+    });
+    observer.observe(document.getElementById('sections-container'), {
+      childList: true, subtree: true
+    });
+    stripClPrefix();
+
+    // â”€â”€ Keep every injected range slider visually synced â”€â”€
+    function styleRangeSliders(root = document) {
+      root.querySelectorAll('input[type="range"]').forEach(slider => {
+        if (slider._rangeStyled) return;
+        slider._rangeStyled = true;
+
+        const updateRange = () => {
+          const min = Number(slider.min || 0);
+          const max = Number(slider.max || 100);
+          const value = Number(slider.value || min);
+          const pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
+          slider.style.setProperty('--range-progress', pct + '%');
+        };
+
+        slider.addEventListener('input', updateRange);
+        slider.addEventListener('change', updateRange);
+        updateRange();
+      });
+    }
+
+    styleRangeSliders();
+
+    // â”€â”€ Search across CDN-injected buttons â”€â”€
+    function filterLibraryGames(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll('#sections-container .letter-section').forEach(section => {
+        let visible = 0;
+        section.querySelectorAll('input[type="button"]').forEach(btn => {
+          const match = !q || btn.value.toLowerCase().includes(q);
+          btn.style.display = match ? '' : 'none';
+          if (match) visible++;
+        });
+        section.style.display = visible > 0 ? '' : 'none';
+      });
+    }
+
+    // â”€â”€ GN Runner game list â”€â”€
+    let gnrunnerLoaded = false;
+    let gnrunnerZones = [];
+    const gnCoverURL = 'https://cdn.jsdelivr.net/gh/freebuisness/covers@main';
+    const gnHtmlURL  = 'https://cdn.jsdelivr.net/gh/freebuisness/html@main';
+
+    function renderGnRunner(zones) {
+      const grid = document.getElementById('gnrunner-grid');
+      grid.innerHTML = '';
+      zones.forEach(zone => {
+        if (!zone.name || !zone.url) return;
+        const isExternal = zone.url.startsWith('http');
+        const gameUrl = isExternal
+          ? zone.url
+          : zone.url.replace('{HTML_URL}', gnHtmlURL).replace('{COVER_URL}', gnCoverURL);
+        const coverSrc = zone.cover
+          ? zone.cover.replace('{COVER_URL}', gnCoverURL).replace('{HTML_URL}', gnHtmlURL)
+          : '';
+        const card = document.createElement('div');
+        card.className = 'gn-card';
+        card.innerHTML = `
+          <img src="${coverSrc}" alt="${zone.name.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.display='none'">
+          <div class="gn-card-name" title="${zone.name.replace(/"/g,'&quot;')}">${zone.name}</div>
+          <div class="gn-card-btns">
+            <button onclick="gnOpen('${gameUrl.replace(/'/g,"\\'")}',${ isExternal})">Open</button>
+            <button onclick="gnSave('${gameUrl.replace(/'/g,"\\'") }','${zone.name.replace(/'/g,"\\'")}',${ isExternal})">Save</button>
+          </div>`;
+        grid.appendChild(card);
+      });
+    }
+
+    function gnOpen(url, isExternal) {
+      if (!url) return;
+      if (isExternal) { window.open(url, '_blank'); return; }
+      fetchGame(url);
+    }
+
+    function gnSave(url, name, isExternal) {
+      if (!url) return;
+      if (isExternal) { window.open(url, '_blank'); return; }
+      fetch(url + '?v=' + Date.now())
+        .then(r => r.text())
+        .then(html => {
+          const blob = new Blob([html], { type: 'text/html' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = name + '.html';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+        })
+        .catch(() => alert('Download failed.'));
+    }
+
+    function filterGnRunner(query) {
+      const q = query.toLowerCase();
+      renderGnRunner(q ? gnrunnerZones.filter(z => z.name && z.name.toLowerCase().includes(q)) : gnrunnerZones);
+    }
+
+    // â”€â”€ Duckmath game list â”€â”€
+    let duckmathLoaded = false;
+    let duckmathGames = [];
+
+    function renderDuckmath(games) {
+      const grid = document.getElementById('duckmath-grid');
+      grid.innerHTML = '';
+      games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'dm-card';
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = game.name || game.id || 'Game';
+        if (game.thumb || game.thumbnail) {
+          img.dataset.src = game.thumb || game.thumbnail;
+        }
+        const name = document.createElement('div');
+        name.className = 'dm-card-name';
+        name.textContent = game.name || game.id;
+        const btns = document.createElement('div');
+        btns.className = 'dm-card-btns';
+        const openBtn = document.createElement('button');
+        openBtn.textContent = 'Open';
+        openBtn.onclick = () => dmOpen(game);
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = 'Save';
+        saveBtn.onclick = () => dmSave(game);
+        btns.appendChild(openBtn);
+        btns.appendChild(saveBtn);
+        card.appendChild(img);
+        card.appendChild(name);
+        card.appendChild(btns);
+        grid.appendChild(card);
+      });
+      setupDuckmathImageLoader();
+    }
+
+    function setupDuckmathImageLoader() {
+      const images = document.querySelectorAll('#duckmath-grid img[data-src]');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const img = entry.target;
+          if (entry.isIntersecting) {
+            if (!img.src) img.src = img.dataset.src;
+          } else {
+            const rect = img.getBoundingClientRect();
+            const farAway = rect.bottom < -600 || rect.top > window.innerHeight + 600;
+            if (farAway) img.removeAttribute('src');
+          }
+        });
+      }, { rootMargin: '600px 0px 600px 0px', threshold: 0 });
+      images.forEach(img => observer.observe(img));
+    }
+
+    function dmOpen(game) {
+      if (!game || !game.url) return;
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.95);';
+      const frame = document.createElement('iframe');
+      frame.src = game.url;
+      frame.allow = 'autoplay; fullscreen; gamepad; pointer-lock; clipboard-write';
+      frame.style.cssText = 'width:100%;height:100%;border:0;';
+      const closeBtn = document.createElement('button');
+      closeBtn.style.cssText = 'position:absolute;top:14px;left:14px;width:42px;height:42px;border:0;border-radius:50%;background:rgba(20,20,20,.95);color:white;font-size:27px;z-index:10;cursor:pointer;font-family:sans-serif;';
+      closeBtn.textContent = 'Ã—';
+      const handleClose = () => overlay.remove();
+      closeBtn.onclick = handleClose;
+      overlay.onclick = e => { if (e.target === overlay) handleClose(); };
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') handleClose();
+      }, { once: true });
+      overlay.appendChild(frame);
+      overlay.appendChild(closeBtn);
+      document.body.appendChild(overlay);
+    }
+
+    function dmSave(game) {
+      if (!game || !game.url) return;
+      const safeUrl = String(game.url).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+      const safeTitle = String(game.name || game.id || 'game').replace(/[<>]/g, '');
+      const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${safeTitle}</title></head><body style="margin:0;overflow:hidden"><iframe src="${safeUrl}" style="width:100vw;height:100vh;border:0" allow="autoplay; fullscreen; gamepad; pointer-lock; clipboard-write" allowfullscreen></iframe></body></html>`;
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = safeTitle + '.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+
+    function filterDuckmath(query) {
+      const q = query.toLowerCase();
+      const filtered = q ? duckmathGames.filter(g => 
+        (g.name && g.name.toLowerCase().includes(q)) || 
+        (g.id && g.id.toLowerCase().includes(q))
+      ) : duckmathGames;
+      renderDuckmath(filtered);
+    }
+
+    // â”€â”€ Database switcher â”€â”€
+    function switchDB(db, tabEl) {
+      document.querySelectorAll('.db-tab').forEach(t => t.classList.remove('active'));
+      tabEl.classList.add('active');
+
+      const youtube = document.getElementById('youtube-container');
+      const bubbls = document.getElementById('sections-container');
+      const search = document.getElementById('gameSearchWrap');
+      const gnWrap = document.getElementById('gnrunner-container');
+      const dmWrap = document.getElementById('duckmath-container');
+      const extraPanels = document.getElementById('extraSourcePanels');
+
+      const extraSources = ['axiom','noah','truffled','3kh0','nebula','classplay','ubg98','cisco','ubg','seraph','elite','ckv'];
+      const isExtra = extraSources.includes(db);
+
+      if (db === 'youtube') {
+        if (youtube) youtube.style.display = 'block';
+        bubbls.style.display = 'none';
+        search.style.display = 'block';
+        gnWrap.style.display = 'none';
+        dmWrap.style.display = 'none';
+        extraPanels.style.display = 'none';
+        renderYoutubePlayables();
+      } else if (db === 'bubbls') {
+        if (youtube) youtube.style.display = 'none';
+        bubbls.style.display = '';
+        search.style.display = '';
+        gnWrap.style.display = 'none';
+        dmWrap.style.display = 'none';
+        extraPanels.style.display = 'none';
+      } else if (db === 'gnrunner') {
+        if (youtube) youtube.style.display = 'none';
+        bubbls.style.display = 'none';
+        search.style.display = 'none';
+        gnWrap.style.display = 'block';
+        dmWrap.style.display = 'none';
+        extraPanels.style.display = 'none';
+        if (!gnrunnerLoaded) {
+          gnrunnerLoaded = true;
+          const loading = document.getElementById('gnrunner-loading');
+          loading.style.display = 'block';
+          fetch('https://cdn.jsdelivr.net/gh/freebuisness/assets@main/zones.json?t=' + Date.now())
+            .then(r => r.json())
+            .then(data => {
+              gnrunnerZones = data;
+              loading.style.display = 'none';
+              renderGnRunner(gnrunnerZones);
+            })
+            .catch(() => {
+              loading.textContent = 'Failed to load game list. Check your connection.';
+            });
+        }
+      } else if (db === 'duckmath') {
+        if (youtube) youtube.style.display = 'none';
+        bubbls.style.display = 'none';
+        search.style.display = 'none';
+        gnWrap.style.display = 'none';
+        dmWrap.style.display = 'block';
+        if (!duckmathLoaded) {
+          duckmathLoaded = true;
+          const loading = document.getElementById('duckmath-loading');
+          loading.style.display = 'block';
+          fetch('https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/gameloader')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+              }
+              return response.text();
+            })
+            .then(code => {
+              const script = document.createElement('script');
+              script.textContent = code;
+              document.body.appendChild(script);
+              setTimeout(() => {
+                if (window.GameLoader && Array.isArray(window.GameLoader.games)) {
+                  duckmathGames = window.GameLoader.games;
+                  loading.style.display = 'none';
+                  renderDuckmath(duckmathGames);
+                } else {
+                  loading.textContent = 'Failed to load games.';
+                }
+              }, 100);
+            })
+            .catch(error => {
+              console.error('GameLoader error:', error);
+              loading.textContent = 'Failed to load game list.';
+            });
+        }
+      } else if (isExtra) {
+        if (youtube) youtube.style.display = 'none';
+        bubbls.style.display = 'none';
+        search.style.display = 'none';
+        gnWrap.style.display = 'none';
+        dmWrap.style.display = 'none';
+        extraPanels.style.display = 'block';
+        activateExtra(db);
+      }
+    }
+
+    // â”€â”€ fetchGame â”€â”€
+    function fetchGame(url) {
+      const win = window.open('', '_blank');
+      fetch(url + '?v=' + Date.now())
+        .then(r => r.text())
+        .then(html => {
+          setTimeout(() => {
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+          }, 50);
+        })
+        .catch(err => {
+          win.document.open();
+          win.document.write(`<html><body style="background:#111;color:white;font-family:sans-serif;padding:20px;"><h1>Load Failed</h1><pre>${err}</pre></body></html>`);
+          win.document.close();
+        });
+    }
+
+
+        // â”€â”€ Codes â”€â”€
+    const box   = document.getElementById("codeBox");
+    const input = document.getElementById("codeInput");
+
+    box.addEventListener("pointermove", e => {
+      const r = box.getBoundingClientRect();
+      box.style.setProperty("--gx", ((e.clientX - r.left) / r.width  * 100) + "%");
+      box.style.setProperty("--gy", ((e.clientY - r.top)  / r.height * 100) + "%");
+    });
+
+const codeVault = {
+  // sha256("blog")
+  "b39c53bfa2812a4d5ba319e3f7f2b2e5c0e1e8ee9c4a0b19cd7d1b9b0a2e9f9d": "aHR0cHM6Ly9iaXRidWNrZXQub3JnL3AycC1hbHQtcHVibGljL3AycC1lbWlzL3Jhdy9tYWluL2Jsb2clMjB0ZXN0"
+  // ...one entry per code, generated below
+};;
+
+    async function sha256Hex(text) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    input.addEventListener("keydown", async e => {
+      if (e.key !== "Enter") return;
+      box.classList.remove("flash"); void box.offsetWidth; box.classList.add("flash");
+      const code = input.value.trim().toLowerCase();
+      const hash = await sha256Hex(code);
+      const target = codeVault[hash];
+      if (target) fetchGame(atob(target));
+      input.value = "";
+    });
+
+    // â”€â”€ Menu toggle â”€â”€
+    let menuOpen = false;
+    function toggleArea() {
+      menuOpen = !menuOpen;
+      document.getElementById("hiddenArea").style.display = menuOpen ? "block" : "none";
+      if (menuOpen) attachButtonListeners();
+    }
+
+    // â”€â”€ Dark mode â”€â”€
+    const darkBtn = document.getElementById("darkToggle");
+    function toggleDark() {
+      document.body.classList.toggle("dark");
+      darkBtn.textContent = document.body.classList.contains("dark") ? "â˜€ï¸" : "ðŸŒ™";
+    }
+
+    // â”€â”€ Button listeners (hardcoded ones) â”€â”€
+    function attachButtonListeners() {
+      document.querySelectorAll(".red-button").forEach(btn => {
+        if (btn._listenersAttached) return;
+        btn._listenersAttached = true;
+        btn.addEventListener("pointermove", e => {
+          const r = btn.getBoundingClientRect();
+          btn.style.setProperty("--gx", `${(e.clientX-r.left)/r.width*100}%`);
+          btn.style.setProperty("--gy", `${(e.clientY-r.top)/r.height*100}%`);
+          btn.style.setProperty("--rx", `${(0.5-(e.clientY-r.top)/r.height)*12}deg`);
+          btn.style.setProperty("--ry", `${((e.clientX-r.left)/r.width-0.5)*12}deg`);
+        });
+        btn.addEventListener("pointerleave", () => {
+          btn.style.setProperty("--gx","50%"); btn.style.setProperty("--gy","50%");
+          btn.style.setProperty("--rx","0deg"); btn.style.setProperty("--ry","0deg");
+        });
+        btn.addEventListener("mouseenter", () => {
+          ring.style.transform="translate(-50%,-50%) scale(0.6)";
+          ring.style.borderColor="rgba(255,120,120,0.6)";
+          dot.style.transform="translate(-50%,-50%) scale(1.8)";
+          dot.style.background="rgba(255,120,120,0.5)";
+        });
+        btn.addEventListener("mouseleave", () => {
+          ring.style.transform="translate(-50%,-50%) scale(1)";
+          ring.style.borderColor="rgba(255,80,80,0.25)";
+          dot.style.transform="translate(-50%,-50%) scale(1)";
+          dot.style.background="rgba(255,80,80,0.35)";
+        });
+      });
+    }
+    attachButtonListeners();
+
+    // â”€â”€ Header glow â”€â”€
+    const header = document.querySelector(".fixed-header");
+    header.addEventListener("pointermove", e => {
+      const r = header.getBoundingClientRect();
+      header.style.setProperty("--gx", ((e.clientX-r.left)/r.width*100)+"%");
+      header.style.setProperty("--gy", ((e.clientY-r.top)/r.height*100)+"%");
+    });
+    header.addEventListener("pointerleave", () => {
+      header.style.setProperty("--gx","50%"); header.style.setProperty("--gy","50%");
+    });
+
+    // â”€â”€ Cursor â”€â”€
+    const dot  = document.getElementById("cursorDot");
+    const ring = document.getElementById("cursorRing");
+    let mouseX=0, mouseY=0, ringX=0, ringY=0;
+    document.addEventListener("mousemove", e => {
+      mouseX=e.clientX; mouseY=e.clientY;
+      dot.style.left=mouseX+"px"; dot.style.top=mouseY+"px";
+    });
+    (function animateRing() {
+      ringX += (mouseX-ringX)*0.18; ringY += (mouseY-ringY)*0.18;
+      ring.style.left=ringX+"px"; ring.style.top=ringY+"px";
+      requestAnimationFrame(animateRing);
+    })();
+    document.querySelectorAll("a").forEach(el => {
+      el.addEventListener("mouseenter", () => {
+        ring.style.transform="translate(-50%,-50%) scale(0.6)";
+        ring.style.borderColor="rgba(255,120,120,0.6)";
+        dot.style.transform="translate(-50%,-50%) scale(1.8)";
+        dot.style.background="rgba(255,120,120,0.5)";
+      });
+      el.addEventListener("mouseleave", () => {
+        ring.style.transform="translate(-50%,-50%) scale(1)";
+        ring.style.borderColor="rgba(255,80,80,0.25)";
+        dot.style.transform="translate(-50%,-50%) scale(1)";
+        dot.style.background="rgba(255,80,80,0.35)";
+      });
+    });
+  </script>
+<script>
+function launchMinecraft() {
+  var gameUrl =
+    'https://bitbucket.org/p2p-alt-public/p2p-emis/raw/main/novix2.html';
+
+  // FILE:// â€” use the working about:blank loader.
+  if (location.protocol === 'file:') {
+    var win = window.open('about:blank', '_blank');
+
+    if (!win) {
+      alert('Popup blocked');
+      return;
+    }
+
+    fetch(gameUrl + '?v=' + Date.now())
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function(html) {
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+      })
+      .catch(function(err) {
+        console.error('Minecraft failed:', err);
+      });
+
+    return;
+  }
+
+  // HTTPS / jsDelivr â€” warn before downloading the tiny launcher.
+  alert(
+    'Minecraft will be downloaded as a small launcher file.\n\n' +
+    'After it finishes downloading, double-click the downloaded ' +
+    '"Minecraft-Loader.html" file to launch Minecraft.\n\n' +
+    'Minecraft itself is NOT being downloaded yet. The large game file ' +
+    'will only be fetched after you open the launcher.'
+  );
+
+  var loader = [
+    '<!doctype html>',
+    '<html>',
+    '<head>',
+    '<meta charset="utf-8">',
+    '<title>Minecraft Loader</title>',
+    '</head>',
+    '<body>',
+    '<script>',
+    'var GAME_URL = ' + JSON.stringify(gameUrl) + ';',
+    'fetch(GAME_URL+"?v="+Date.now()).then(function(r){',
+    'if(!r.ok)throw new Error("HTTP "+r.status);',
+    'return r.text();',
+    '}).then(function(html){',
+    'document.open();',
+    'document.write(html);',
+    'document.close();',
+    '}).catch(function(e){',
+    'document.body.innerHTML="<pre>"+String(e).replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</pre>";',
+    '});',
+    '<' + '/script>',
+    '</body>',
+    '</html>'
+  ].join('\n');
+
+  var blob = new Blob([loader], {
+    type: 'text/html'
+  });
+
+  var downloadUrl = URL.createObjectURL(blob);
+
+  var a = document.createElement('a');
+  a.href = downloadUrl;
+  a.download = 'Minecraft-Loader.html';
+
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  setTimeout(function() {
+    URL.revokeObjectURL(downloadUrl);
+  }, 60000);
+}
+</script>
+
+<script>
+/* Axiom's jsDelivr-backed libraries, kept as separate source sections.
+   Only catalog requests and playable URLs on cdn.jsdelivr.net are used here. */
+const EXTRA_GAMES = {
+  axiom: [{"name":"Doom","author":"id Software","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/1200.webp","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/doom.html"},{"name":"Doom 2","author":"id Software","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/ss_05f81f237a6370c3c797af951b42291dc747d199.1920x1080.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/doom2.html"},{"name":"Doom 3","author":"id Software","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/doom3box.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/doom3.html"},{"name":"Capuchin","author":"James Napier","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/capuchinimg.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/Mathisfunallfiles@refs/heads/main/capuchinsf.html"},{"name":"Doom 64","author":"Midway Games","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/doom_64_box.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/doom64.html"},{"name":"Gran Turismo 2","author":"Polyphony Digital","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/61qihedj%2B5l._ac_uf1000%2C1000_ql80_.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/gt2.html"},{"name":"GTA Advance","author":"Rockstar Games","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/grand%20theft%20auto%20advance%20(usa)-image.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/gtaa.html"},{"name":"GTA China","author":"Rockstar Games","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/grand%20theft%20auto%20-%20chinatown%20wars%20(usa)%20(en%2Cfr%2Cde%2Ces%2Cit)-image.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/gtachina.html"},{"name":"GTA Vice City Stories","author":"Rockstar Games","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/gtavcs.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/gtavcs.html"},{"name":"Journey","author":"thatgamecompany","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/journey-image.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/journey.html"},{"name":"LEGO Star Wars","author":"Traveller's Tales","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/61xyz0rhcol._ac_uf1000%2C1000_ql80_.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/lsw.html"},{"name":"LEGO Star Wars 2","author":"Traveller's Tales","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/download.jfif","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/lsw2.html"},{"name":"Super Mario World","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/super_mario_world_coverart.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/smw.html"},{"name":"Scribblenauts","author":"5th Cell","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/scribblenauts_cover.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/scribblenauts.html"},{"name":"Opposing Force","author":"Gearbox Software","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/opposing.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/opposing.html"},{"name":"Peggle","author":"PopCap Games","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/peggle.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/peggle.html"},{"name":"Super Mario Bros","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/super_mario_bros._box.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/smb.html"},{"name":"Super Mario Bros 2","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/super%20mario%20bros.%202%20(usa)%20(rev%201)-image.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/smb2.html"},{"name":"Super Mario Bros 3","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/super%20mario%20bros.%203%20(usa)%20(rev%201)-image.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/smb3.html"},{"name":"Ms. Pac-Man","author":"Namco","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/mspacman-thumb.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/mspacman.html"},{"name":"Patrick's","author":"Axiom","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/OIP.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/patricks/index.html"},{"name":"Plants vs. Zombies","author":"PopCap Games","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/plants%2Bvs.%2Bzombies%2B(usa)-image.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/pvz.html"},{"name":"Shotgun Mario 64","author":"GomePlayTV","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/shotgunmario64.png","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/shotgunmario64.html"},{"name":"Pac-Man","author":"Namco","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/puckman-thumb.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/puckman.html"},{"name":"Half-Life","author":"Valve","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/half-life.png","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clhalflife.html"},{"name":"NBA JAM","author":"EA SPORTS","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/nbajamte-1673053591219.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clNBAjam.html"},{"name":"BitLife","author":"BitLife","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(71).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clbitlife.html"},{"name":"Paper Mario DS","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/paper%20mario%20ds.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clPaperMarioDSE.html"},{"name":"Bitplanes","author":"Someone","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/bitplaness.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/Mathisfunallfiles@main/bitplanesnew.html"},{"name":"Backyard Baseball 10","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/6333099-backyard-baseball-10-nintendo-ds-front-cover.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clbackyardbaseball10.html"},{"name":"Angry Birds","author":"Rovio","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/angry%20birds.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clangrybirds.html"},{"name":"Flushed Away DS","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/ds_flushed_away_p_mvu68a.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/retro-games-@main/FlushedAway.html"},{"name":"Mario Party Advance","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/MariopartyGBA.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clMario%20Party%20Advance.html"},{"name":"Subway Surfers Berlin","author":"NA","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/subway-surfers-berlin.png","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clsubwaysurfersberlin.html"},{"name":"Baseball Bros","author":"NA","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/baseball_bros.webp","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clbaseballbros.html"},{"name":"Five Nights at Shrek's","author":"NA","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/770ff34d046e6ccd6ee470d9d7b3d55f.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfivenightsatshreks.html"},{"name":"FIFA World Cup 2026 SNES","author":"Nintendo","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/image-49.png","url":"https://cdn.jsdelivr.net/gh/Onex558/Mathisfunallfiles@main/worldcup.html"},{"name":"Cookie Clicker","author":"NA","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/432bf350e866b2544f9a5cd80de83e0c24f4efddfd7811016c4aa33e48c5df7c.avif","url":"https://cdn.jsdelivr.net/gh/Onex558/Mathisfunallfiles@main/cookie-clicker.html"},{"name":"Spaceflight Simulator","author":"NA","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/09dc947ac1fdd31481539b5766a86513.png","url":"https://cdn.jsdelivr.net/gh/Onex558/Mathisfunallfiles@main/Spaceflight%20Simulator.html"},{"name":"1v1.LOL","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/channels4_profile.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl1v1lol.html"},{"name":"2048","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/download.png","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl2048.html"},{"name":"2048 Cupcakes","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/download.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl2048cupcakes.html"},{"name":"3 Pandas","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl3pandas.html"},{"name":"3 Pandas Brazil","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/pandasinjapna.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl3pandasbrazil.html"},{"name":"3 Pandas Fantasy","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/3pandasinfanstasy.jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl3pandasfantasy.html"},{"name":"3 Pandas Japan","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/3pandasinjapan.jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl3pandasjapan.html"},{"name":"3 Pandas Night","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/panasdss%20night.jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl3pandasnight.html"},{"name":"3 Slices 2","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/3slicesof2.png","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl3slices2.html"},{"name":"4th and Goal","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/4thandgoal.jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl4thandgoal.html"},{"name":"8 Ball Classic","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/8BallBilliardsClassicTeaser.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl8ballclassic.html"},{"name":"8 Ball Pool","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/8-Ball-Pool.png.webp","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cl8ballpool.html"},{"name":"ADOFAI","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/adofai.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clADOFAI.html"},{"name":"A Dark Room","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/adofai.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clADarkRoom.html"},{"name":"Adventure Capitalist","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/Adventure-Capitalist.webp","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clAdventureCapatalist.html"},{"name":"Altered Beast","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/altered-beast-3.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clAltered%20Beast.html"},{"name":"Geometry Dash Wave","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/geometry-dash-wave-game.png","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clGeometryDashWave.html"},{"name":"Awesome Pirates","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/Awesome-Pirates.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clAwesomePirates.html"},{"name":"B3313","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/sm64_b3313_fanart_by_modraw08_djcr62e-fullview.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clB3313.html"},{"name":"BFDI Branches","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/bfdi_branches__demo__poster__by_bobbyinteraction5_dhr7288-fullview.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clBFDIBranches.html"},{"name":"BMX 2","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@refs/heads/main/images/bmx%202.avif","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clBMX2.html"},{"name":"Bloons TD 1","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/OIP.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clBTD1.html"},{"name":"Bank Robbery","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/bank-robbery.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clBank%20Robbery.html"},{"name":"Bonanza Bros","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/Bonanza-Bros-destc-1024x576.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clBonanza-Bros.html"},{"name":"Bounty Of One","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/bounty-of-one-button-1696613856511.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clBountyOfOne.html"},{"name":"Brawl Stars","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/brawl-stars-game-ft.webp","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clBrawlstars.html"},{"name":"Cell To Singularity","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/celltosingularity-1673648155490.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clCellToSingularity.html"},{"name":"Chicken CS","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@refs/heads/main/images/chicken-cs_16x9-cover.avif","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clChickenCS.html"},{"name":"CircloO 2","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/CircloO_2.png","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clCircloO2.html"},{"name":"Crystal Castles","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/crystal-castles_5.png","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clCrystalCastles.html"},{"name":"Dashmetry","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/dashmetry.png","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clDashmetry.html"},{"name":"Dragon Ball Z Legacy of Goku","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/1200px-Dragon_Ball_Z-_The_Legacy_of_Goku_(us)_cover.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clDragonBallZTheLegacyofGoku.html"},{"name":"Dragon Quest IX","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/Dragon-Quest-IX-Box-art-1280px-50p.webp","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clDragonQuestIX.html"},{"name":"FIFA 07","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/fifa%207.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clFIFA07.html"},{"name":"FIFA 10","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@refs/heads/main/images/FIFA-10-Cover.avif","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clFIFA10.html"},{"name":"FIFA 11","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/Fifa11_Game_Cover.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clFIFA11.html"},{"name":"FNAF","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/fnaf1_cover.webp","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clFNAF.html"},{"name":"FNAF 2","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/five-nights-at-freddys-2-game.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clFNAF2.html"},{"name":"FNAF 3","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/fnaf3_cover.webp","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clFNAF3.html"},{"name":"FNAF 4","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@refs/heads/main/images/fnaf-4-poster.avif","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clFNAF4.html"},{"name":"Tomcat F-14 Flight Sim","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/56869-dan-kitchen-s-tomcat-the-f-14-fighter-simulator-atari-2600-front-cover.webp","url":"https://cdn.jsdelivr.net/gh/Onex558/retro-games-@main/atari2880%20tomcat%20f-14.html"},{"name":"MS Flight Sim Old","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/microsoft-flight-simulator-4-03-big.webp","url":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/microsoftflightsimold.html"},{"name":"Untime","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(6).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cluntime.html"},{"name":"Untitled Goose Game","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(5).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/cluntitledgoosegame.html"},{"name":"Upgrade Complete","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(8).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clupgradecomplete.html"},{"name":"Upgrade Complete 2","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(7).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clupgradecomplete2.html"},{"name":"Upslash","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(9).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clupslash.html"},{"name":"Urban Champion","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/download%20(2).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clurbanchampion.html"},{"name":"Cluster Rush","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(72).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clusterrush.html"},{"name":"Vampire Survivors","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(10).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clvampiresurvivors.html"},{"name":"Vanguard","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/header.jpg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clvanguard.html"},{"name":"Vapor Trails","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(11).jpeg","url":"https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/UGS-Files/clvaportrails.html"},{"name":"Minecraft Tower Defense","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(12).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clMINECRAFTTOWERDEFENSE.html"},{"name":"Hell Talker","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(1).webp","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/HellTaker.html"},{"name":"10 Minutes Til Dawn","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images.png","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/cl10minutestildawn.html"},{"name":"Crossy Road","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(16).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clcrossyroad.html"},{"name":"Slope","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(1).png","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clslope.html"},{"name":"Run","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(19).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clrun.html"},{"name":"Run 2","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(20).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clrun2.html"},{"name":"Run 3","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(21).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clrun3.html"},{"name":"Retro Bowl","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/unnamed.png","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/offline/retrobowl.html"},{"name":"Baldi's Basics","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/baldisbasics_plus.webp","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clbaldisbasics.html"},{"name":"Chess","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(22).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clchessclassic.html"},{"name":"Minecraft","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/download%20(3).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clminecraftpocketedition.html"},{"name":"Stack","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(25).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/offline/stack.html"},{"name":"Happy Wheels","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/happy-wheels-logo.avif","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clhappywheels.html"},{"name":"Orange Roulette","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(27).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clOrangeRoulette.html"},{"name":"Friday Night Funkin Twiddler Finger","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(32).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfTWIDDLEFINGER.html"},{"name":"Friday Night Funkin Aethos","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(33).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfaethos.html"},{"name":"Friday Night Funkin Binary Breakdown","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(34).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfbinarybreakdown.html"},{"name":"Friday Night Funkin Below depths","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(35).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfbelowdepths.html"},{"name":"Friday Night Funkin Black Betrayal","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(36).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfblackbetrayal.html"},{"name":"Friday Night Funkin B Side","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(37).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfblackbetrayal.html"},{"name":"Friday Night Funkin Candy Carrier","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(38).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfcandycarrier.html"},{"name":"Friday Night Funkin Chara","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(39).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfchara.html"},{"name":"Friday Night Funkin City Tales","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(40).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfcitytales.html"},{"name":"Friday Night Funkin Corrision","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(17).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfridaynightfunkin.html"},{"name":"Friday Night Funkin Cory","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/maxresdefault.jpg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfcory.html"},{"name":"Friday Night Funkin Crunchin","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(42).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfcrunchin.html"},{"name":"Friday Night Funkin Deceiver","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(43).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfdeciever.html"},{"name":"Friday Night Funkin Desolation","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(44).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfdesolation.html"},{"name":"Friday Night Funkin Golden Apple","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(50).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clfnfgoldenapple.html"},{"name":"Doodle Jump","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(49).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/cldoodlejumpgoober.html"},{"name":"Basket Bros","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(54).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clbasketbros.html"},{"name":"Paper.io","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/6-1-684971-52.webp","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clpaperio.html"},{"name":"Moto x3m","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(55).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/offline/motox3m.html"},{"name":"Moto x3m 2","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(56).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clmotox3m2.html"},{"name":"Moto x3m Winter","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/moto-x3m-4-winter-logo.jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/offline/motox3mwinter.html"},{"name":"Google Dino Game","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/unnamed%20(1).png","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clgoogledino.html"},{"name":"Pac Man","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(2).png","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/offline/pacman.html"},{"name":"Parking fury","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(57).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/offline/parkingfury.html"},{"name":"Fruit Ninja","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(58).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/offline/fruitninja.html"},{"name":"Flappy bird","author":"Unknown","cover":"https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/images/images%20(59).jpeg","url":"https://cdn.jsdelivr.net/gh/Onex558/Ultimate-games-stash-games-@main/UGS-Files/clflappybird.html"}],
+  noah: [], truffled: [], '3kh0': [], nebula: [], classplay: [], ubg98: [], cisco: [], ubg: [], seraph: [], elite: [], ckv: []
+};
+const EXTRA_LOADED = {axiom:true,noah:false,truffled:false,'3kh0':false,nebula:false,classplay:false,ubg98:false,cisco:false,ubg:false,seraph:false,elite:false,ckv:false};
+
+const EXTRA_CONFIG = {
+  noah:{label:"Noah's Hub",load:loadNoah},
+  truffled:{label:'Truffled',load:loadTruffled},
+  '3kh0':{label:'3kh0 Lite',load:load3kh0},
+  nebula:{label:'Nebula CDN',load:loadNebula},
+  classplay:{label:'ClassPlay',load:loadClassPlay},
+  ubg98:{label:'UBG98',load:loadUbg98},
+  cisco:{label:'Cisco',load:loadCisco},
+  ubg:{label:'Ubg',load:loadUbg},
+  seraph:{label:'Seraph',load:loadSeraphSrc},
+  elite:{label:'Elite Gamez',load:loadEliteSrc},
+  ckv:{label:'Chicken Kings Vault',load:loadCkvSrc}
+};
+const JSDELIVR=/^https:\/\/cdn\.jsdelivr\.net\//i;
+function onlyJsdelivr(list){return (Array.isArray(list)?list:[]).filter(g=>g&&g.name&&JSDELIVR.test(String(g.url||g.resolvedUrl||''))).map(g=>({name:String(g.name),cover:String(g.cover||g.resolvedCover||''),url:String(g.url||g.resolvedUrl)}));}
+function escExtra(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderExtra(src){const grid=document.getElementById('extraGrid-'+src),load=document.getElementById('extraLoading-'+src),q=(document.getElementById('extraSearch-'+src).value||'').toLowerCase().trim(); if(!grid)return; const list=EXTRA_GAMES[src].filter(g=>!q||g.name.toLowerCase().includes(q)); load.style.display='none'; if(!list.length){grid.innerHTML='<div class="extra-empty">No jsDelivr-hosted games found in this source.</div>';return;} grid.innerHTML=list.map(g=>`<div class="extra-game-card"><img src="${escExtra(g.cover)}" loading="lazy" alt="" onerror="this.style.display='none'"><div class="extra-game-name" title="${escExtra(g.name)}">${escExtra(g.name)}</div><div class="extra-game-btns"><button onclick="openExtraGame('${encodeURIComponent(g.url)}')">Open</button><button onclick="downloadExtraGame('${encodeURIComponent(g.url)}','${encodeURIComponent(g.name)}')">Download</button></div></div>`).join('');}
+async function openExtraGame(encoded){const url=decodeURIComponent(encoded);if(!JSDELIVR.test(url))return;const w=window.open('about:blank','_blank');if(!w)return;try{const r=await fetch(url+'?v='+Date.now());if(!r.ok)throw Error('HTTP '+r.status);w.document.open();w.document.write(await r.text());w.document.close();}catch(e){w.document.open();w.document.write('<pre>Load failed: '+escExtra(e)+'</pre>');w.document.close();}}
+async function downloadExtraGame(encoded,name){const url=decodeURIComponent(encoded);if(!JSDELIVR.test(url))return;try{const r=await fetch(url+'?download='+Date.now());if(!r.ok)throw Error('HTTP '+r.status);const a=document.createElement('a');a.href=URL.createObjectURL(await r.blob());a.download=(decodeURIComponent(name).replace(/[^a-z0-9._-]+/gi,'_')||'game')+'.html';document.body.appendChild(a);a.click();a.remove();}catch(e){alert('Download failed.');}}
+async function getJson(url){if(!JSDELIVR.test(url))throw Error('Non-jsDelivr catalog blocked');const r=await fetch(url+'?t='+Date.now());if(!r.ok)throw Error('HTTP '+r.status);return r.json();}
+function absJs(base,v){const s=String(v||'').trim();if(!s)return '';if(JSDELIVR.test(s))return s;if(s.startsWith('/'))return base+s;if(/^https?:\/\//i.test(s))return s;return base+'/'+s.replace(/^\.\//,'');}
+async function loadNoah(){const url='https://cdn.jsdelivr.net/gh/Onex558/uranium-source-@main/nth.js';const r=await fetch(url+'?t='+Date.now());if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const m=t.match(/const\s+games\s*=\s*(\[[\s\S]*?\]);/);if(!m)throw Error('catalog parse failed');const d=Function('return '+m[1])();return onlyJsdelivr(d.map(g=>({name:g.title||g.name,cover:g.image||g.cover,url:g.url})));}
+async function loadTruffled(){const d=await getJson('https://cdn.jsdelivr.net/gh/aukak/truffled@main/public/js/json/g.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.name,cover:g.thumbnail||g.cover||g.image,url:g.url})));}
+async function load3kh0(){const d=await getJson('https://cdn.jsdelivr.net/gh/3kh0/3kh0-lite@main/config/games.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.title||g.name,cover:g.imgSrc||g.image||g.cover,url:g.link||g.url})));}
+async function loadNebula(){const d=await getJson('https://cdn.jsdelivr.net/gh/GoatTech-42/NEBULA-CDN@main/games.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.name,cover:'',url:'https://cdn.jsdelivr.net/gh/GoatTech-42/NEBULA-CDN@main/'+String(g.file||'').replace(/^\//,'')})));}
+async function loadClassPlay(){const base='https://cdn.jsdelivr.net/gh/x8rr/cherri@main';const d=await getJson(base+'/assets/json/classplay.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.name,cover:g.img||g.image||g.cover||g.thumbnail,url:g.url||g.link})).map(g=>({name:g.name,cover:absJs(base,g.cover),url:absJs(base,g.url)})));}
+async function loadUbg98(){const d=await getJson('https://cdn.jsdelivr.net/gh/ubg98/ubg98.github.io@gh-pages/assets/js/games.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.name||g.title,cover:g.image||g.img||g.thumbnail,url:g.url||g.link})));}
+async function loadCisco(){const d=await getJson('https://cdn.jsdelivr.net/gh/PeteZah-Games/PeteZahGames@main/public/storage/data/collection.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.label,cover:g.imageUrl,url:g.url})));}
+async function loadUbg(){const base='https://cdn.jsdelivr.net/gh/UseInterstellar/Interstellar-Assets@main';const d=await getJson(base+'/json/games.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:String(g.name||'').replace(/^!\s*/,''),cover:g.image,url:g.link})).map(g=>({name:g.name,cover:absJs(base,g.cover),url:absJs(base,g.url)})));}
+async function loadSeraphSrc(){const imgBase='https://cdn.jsdelivr.net/gh/a456pur/seraph@main/games';const d=await getJson('https://cdn.jsdelivr.net/gh/DominumNetwork/dominum@main/src/assets/libraries/seraph/games.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.name,cover:absJs(imgBase,g.img),url:g.url})));}
+async function loadEliteSrc(){const base='https://cdn.jsdelivr.net/gh/1234chromebook1234-creator/ww@main';const d=await getJson(base+'/games.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.title,cover:absJs(base,g.image),url:absJs(base,g.url)})));}
+async function loadCkvSrc(){const base='https://cdn.jsdelivr.net/gh/carbonicality/ChickenKingsVault@main';const d=await getJson(base+'/games.json');const l=Array.isArray(d)?d:(d&&d.games)||[];return onlyJsdelivr(l.map(g=>({name:g.name,cover:absJs(base+'/images',g.img),url:absJs(base+'/gamefiles',g.html)})));}
+
+async function ensureExtra(src){if(EXTRA_LOADED[src]){renderExtra(src);return;}const loading=document.getElementById('extraLoading-'+src);loading.textContent='Loading '+EXTRA_CONFIG[src].label+'...';try{EXTRA_GAMES[src]=await EXTRA_CONFIG[src].load();EXTRA_LOADED[src]=true;renderExtra(src);}catch(e){console.warn('[GSITE2] '+src,e);loading.textContent='Failed to load this jsDelivr catalog.';}}
+function activateExtra(src){document.querySelectorAll('.extra-source-tab').forEach(b=>b.classList.toggle('active',b.dataset.src===src));document.querySelectorAll('.extra-source-panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===src));ensureExtra(src);}
+document.querySelectorAll('.extra-source-tab').forEach(b=>b.addEventListener('click',()=>activateExtra(b.dataset.src)));
+Object.keys(EXTRA_GAMES).forEach(src=>{const i=document.getElementById('extraSearch-'+src);if(i)i.addEventListener('input',()=>renderExtra(src));});
+renderExtra('axiom');
+</script>
+</body>
+</html>
